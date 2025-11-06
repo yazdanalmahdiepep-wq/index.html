@@ -1,87 +1,761 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voltage Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pterodacly Danz Official</title> <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://res.cloudinary.com/djcvqhjkz/image/upload/v1761050234/ahdwtvzncqeof2tqtsve.jpg" type="image/jpeg" style="border-radius: 50%;"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
 
-  <!-- Font Google -->
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Nosifer&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        .card-3d {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: black url('/assets/nebula-merah.jpg') center center/cover no-repeat;
-      color: #cc00ff;
-      font-family: 'UnifrakturCook', cursive;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .card {
-      background: rgba(128, 0, 0, 0.04);
-      border: 1px solid rgba(255, 0, 0, 0.2);
-      backdrop-filter: blur(8px);
-      padding: 32px 26px;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 400px;
-      z-index: 2;
-      text-align: center;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.45);
-      animation: fadeIn 1s ease;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 35px rgba(255, 0, 0, 0.65);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .icon {
-      font-size: 36px;
-      color: #ff0000;
-      margin-bottom: 12px;
-      text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
-    }
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+       
+        .nav-button {
+            transition: all 0.2s ease-in-out;
+            box-shadow: inset 0 -2px 0 0 #4a5568, inset 0 2px 0 0 rgba(255, 255, 255, 0.05);
+        }
+        .nav-button:last-child {
+            box-shadow: none;
+        }
+        .nav-button:active {
+            transform: scale(0.98);
+        }
+        .nav-button.active {
+            background-color: #4a5568;
+            color: #fff;
+        }
     
-    .logo {
-      width: 90px;
-      height: 90px;
-      margin: 0 auto 14px;
-      display: block;
-      border-radius: 50%;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.9);
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-    .logo:hover { transform: rotate(8deg) scale(1.05); }
+        .package-card {
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            cursor: pointer;
+        }
+        .package-card:active {
+            transform: scale(0.95);
+        }
+        .package-card.selected {
+            background-color: #4a5568;
+            border-color: #4338ca;
+            box-shadow: 0 0 15px rgba(67, 56, 202, 0.4);
+        }
+                
+        #message-container {
+            position: fixed;
+            top: 1rem;
+            right: -100%;
+            z-index: 50;
+            transition: right 0.5s ease-in-out;
+            width: fit-content;
+            max-width: 90%;
+        }
+        #message-container.show {
+            right: 1rem;
+        }
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #2d3748;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            max-width: 90%;
+            width: 400px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .data-display {
+            background-color: #1a202c;
+            border: 1px solid #4a5568;
+            padding: 1rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+                
+        .slider-container {
+            transition: opacity 0.3s ease-in-out;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #4a5568;
+            outline: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s ease-in-out;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4338ca;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            transition: background 0.2s ease-in-out;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4338ca;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            transition: background 0.2s ease-in-out;
+        }
+        input[type="range"]:hover::-webkit-slider-thumb,
+        input[type="range"]:active::-webkit-slider-thumb {
+            background: #362f79;
+        }
+        input[type="range"]:hover::-moz-range-thumb,
+        input[type="range"]:active::-moz-range-thumb {
+            background: #362f79;
+        }
 
-    .title {
-      font-size: 34px;
-      font-family: 'Nosifer', cursive;
-      color: #ff0000;
-      text-shadow: 0 0 10px #ff0000;
-      margin-bottom: 10px;
-    }
+        
+        .scrollable-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <header class="mb-6 p-4 rounded-xl bg-gray-800 flex items-center justify-between max-w-6xl mx-auto lg:hidden card-3d">
+        <button id="hamburger-menu" class="text-white text-xl p-2 rounded-md hover:bg-gray-700 transition-colors duration-200">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="flex items-center space-x-2">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-100 flex-grow">Cpanel Pterodacly Danz Official</h1> </div>
+        <button onclick="showModal('help-modal')" class="text-gray-400 hover:text-white transition-colors text-lg p-2">
+            <i class="fas fa-book"></i>
+        </button>
+    </header>
 
-    .subtitle {
-      font-size: 13px;
-      color: #ff6666;
-      font-family: 'Poppins', sans-serif;
-      margin-bottom: 26px;
+    <div class="lg:flex lg:space-x-8 max-w-7xl mx-auto">
+        <div id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-800 shadow-lg z-50 -translate-x-full lg:relative lg:translate-x-0 lg:w-72 lg:flex-shrink-0 lg:shadow-none lg:rounded-2xl lg:p-6 lg:border lg:border-gray-700 card-3d">
+            <div class="p-4 flex items-center justify-between border-b border-gray-700 lg:hidden">
+                <div class="flex items-center space-x-3">
+                    <img id="profile-pic" src="https://uniform-green-d3yziocrlb.edgeone.app/IMG-20250902-WA0498.jpg" alt="Foto Profil" class="w-10 h-10 rounded-full border border-gray-400 object-cover">
+                    <h2 class="text-xl font-semibold text-white">Cpanel Menu</h2>
+                </div>
+                <button id="close-sidebar" class="text-gray-400 hover:text-white transition-colors text-lg">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col p-2 space-y-1 mt-4">
+                <a href="#" id="nav-create-sidebar" onclick="showTab('create'); toggleSidebar();" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:text-white text-gray-300">
+                    <i class="fas fa-plus mr-3"></i> Buat Server
+                </a>
+                <a href="#" id="nav-servers-sidebar" onclick="showTab('list-servers'); toggleSidebar();" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:hover:text-white text-gray-300">
+                    <i class="fas fa-server mr-3"></i> Daftar Server
+                </a>
+                <a href="#" id="nav-users-sidebar" onclick="showTab('list-users'); toggleSidebar();" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:text-white text-gray-300">
+                    <i class="fas fa-users mr-3"></i> Daftar User
+                </a>
+                <a href="#" id="nav-create-admin-sidebar" onclick="showTab('create-admin'); toggleSidebar();" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:text-white text-gray-300">
+                    <i class="fas fa-user-plus mr-3"></i> Buat Admin panel
+                </a>
+                <a href="#" id="nav-keys-sidebar" onclick="showTab('manage-keys'); toggleSidebar();" class="nav-button hidden flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:text-white text-gray-300">
+                    <i class="fas fa-key mr-3"></i> Kelola Key
+                </a>
+
+                
+                <div class="border-t-2 border-gray-700 my-12"></div>
+
+                <a href="https://wa.me/message/RGDP6NSHA5ZWH1" target="_blank" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:text-white text-gray-300">
+                    <i class="fab fa-whatsapp mr-3"></i> WhatsApp Owner
+                </a>
+                <a href="https://whatsapp.com/channel/0029VaVJJeQ72WTqHpT2V92M" target="_blank" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:text-white text-gray-300">
+                    <i class="fab fa-whatsapp mr-3"></i> Saluran WhatsApp
+                </a>
+                <a href="https://t.me/dalangstore" target="_blank" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:text-white text-gray-300">
+                    <i class="fab fa-telegram-plane mr-3"></i> Telegram
+                </a>
+                
+                
+                <div class="mt-4 pt-4 border-t border-gray-700">
+                    <p class="text-center text-xs text-gray-500">&copy; Pterodacly Danz Official 2025</p> </div>
+
+                <button id="nav-logout-sidebar" onclick="handleLogout(); toggleSidebar();" class="nav-button flex items-center px-4 py-3 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 mt-4">
+                    <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                </button>
+            </nav>
+        </div>
+
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+        
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+        
+        <div id="login-modal" class="modal" style="display: flex;">
+    <div class="modal-content card-3d">
+        <div class="flex justify-center mb-4">
+            <img id="profile-picture" src="https://res.cloudinary.com/djcvqhjkz/image/upload/v1761050234/ahdwtvzncqeof2tqtsve.jpg" alt="Foto Profil" class="w-24 h-24 rounded-full border-2 border-gray-600">
+        </div>
+
+        <h3 class="text-xl font-semibold text-center mb-4 text-white">Masukkan Keys Akses</h3>
+        <form id="login-form" class="space-y-4">
+            <div>
+                <input type="password" id="access-key-input" placeholder="Masukkan Key Anda" class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:border-indigo-500 text-white" required>
+            </div>
+            <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-colors duration-200">Login</button>
+        </form>
+        
+        <div class="text-center mt-4">
+            <a href="https://wa.me/message/RGDP6NSHA5ZWH1" class="text-indigo-400 hover:text-indigo-300 transition-colors duration-200">Daftar?</a>
+        </div>
+    </div>
+</div>
+
+        <div class="flex-1 w-full lg:mt-0">
+            <div id="message-container">
+                <div id="message-box" class="p-4 rounded-md border text-sm" role="alert"></div>
+            </div>
+
+            <div id="confirmation-modal" class="modal">
+                <div class="modal-content card-3d">
+                    <p id="modal-message" class="text-white mb-4"></p>
+                    <div class="flex justify-end space-x-2">
+                        <button id="modal-cancel-btn" class="px-3 py-1 bg-gray-600 text-white rounded-md hover:bg-gray-700 text-sm">Batal</button>
+                        <button id="modal-confirm-btn" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm">Ya</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="success-modal" class="modal">
+                <div class="modal-content card-3d">
+                    <h3 id="modal-title" class="text-xl font-semibold mb-2 text-white"></h3>
+                    <p id="modal-subtitle" class="text-gray-300 mb-4"></p>
+                    
+                    <div id="modal-details-container" class="data-display rounded-lg mb-4"></div>
+                    
+                    <div class="flex justify-center space-x-2">
+                        <button id="copy-all-btn" class="px-3 py-1 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-colors duration-200 text-sm">
+                            <i class="fas fa-copy mr-2"></i>Salin
+                        </button>
+                        <button id="close-success-modal" class="px-3 py-1 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 transition-colors duration-200 text-sm">Tutup</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="help-modal" class="modal">
+                <div class="modal-content card-3d">
+                    <h3 class="text-xl font-semibold mb-4 text-white text-center">⚠️Rules & Tutorial</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-300"> 
+                        <li>Dilarang Bagikan Key & server secara gratis</li>
+                        <li>Dilarang Hapus server,user,key secara sembarangan</li>
+                        <li>Melanggar aturan rules,blacklist no toleransi</li>                        
+                        <li>Kelola Key: Buat & daftar key akses sesuai role.</li>                      
+                        <li>Buat Server: Masukkan nama server, pilih egg dan spesifikasi.</li>
+                        <li>Port voice Samp tunggu beberapa tahun🗿/mau fast hubungi owner</li>
+                        <li>Daftar Server: Lihat semua server dan kelola server.</li>
+                        <li>Daftar User: Cek daftar user dan ID.</li>
+                        <li>Buat Admin panel: (only dalang).</li>
+                    </ul> 
+                    <div class="flex justify-end mt-4">
+                        <button onclick="closeModal('help-modal')" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Tutup</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="main-content" class="bg-[#2d3748] p-6 md:p-8 rounded-2xl shadow-lg border border-gray-700 card-3d hidden">
+                <div id="create-tab" class="tab-content">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-200">Buat Server Baru</h2>
+                    <form id="create-server-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="server-name" class="block text-sm font-medium text-gray-400">Nama Server</label>
+                                <input type="text" id="server-name" placeholder="Masukkan nama server..." class="mt-1 block w-full rounded-md bg-[#4a5568] border-transparent focus:border-indigo-500 focus:ring-indigo-500 text-white p-2" required>
+                            </div>
+                            
+                            <div>
+                                <label for="platform-select" class="block text-sm font-medium text-gray-400">Pilih Type Egg</label>
+                                <select id="platform-select" class="mt-1 block w-full rounded-md bg-[#4a5568] border-transparent focus:border-indigo-500 focus:ring-indigo-500 text-white p-2" required>
+                                    <option value="nodejs">Nodejs/Bot</option>
+                                    <option value="samp">SA-MP</option>
+                                </select>
+                            </div>
+
+                            <div id="samp-os-selection" class="hidden">
+                                <label for="os-select" class="block text-sm font-medium text-gray-400">Pilih Sistem Operasi</label>
+                                <select id="os-select" class="mt-1 block w-full rounded-md bg-[#4a5568] border-transparent focus:border-indigo-500 focus:ring-indigo-500 text-white p-2">
+                                    <option value="linux">Linux</option>
+                                    <option value="windows">Windows</option>
+                                </select>
+                            </div>
+
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="flex items-center text-sm font-medium text-gray-400 cursor-pointer">
+                                    <input type="checkbox" id="existing-user-checkbox" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out rounded">
+                                    <span class="ml-2">Tambahkan server ke user yang sudah ada?</span>
+                                </label>
+                            </div>
+
+                            <div id="user-id-input-group" class="col-span-1 md:col-span-2 hidden">
+                                <label for="user-id" class="block text-sm font-medium text-gray-400">ID User</label>
+                                <input type="text" id="user-id" placeholder="Masukkan ID User..." class="mt-1 block w-full rounded-md bg-[#4a5568] border-transparent focus:border-indigo-500 focus:ring-indigo-500 text-white p-2">
+                            </div>
+                        </div>
+
+                        <div id="package-selection" class="package-container space-y-2 hidden">
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Pilih Spesifikasi</label>
+                            <div id="package-container" class="flex flex-wrap gap-2 justify-center sm:justify-start">
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="1024" data-disk="1024" data-cpu="30">1 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="2048" data-disk="2048" data-cpu="50">2 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="3072" data-disk="3072" data-cpu="75">3 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="4096" data-disk="4096" data-cpu="80">4 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="5120" data-disk="5120" data-cpu="90">5 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="6144" data-disk="6144" data-cpu="95">6 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="7168" data-disk="7168" data-cpu="100">7 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="8192" data-disk="8192" data-cpu="120">8 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="9216" data-disk="9216" data-cpu="140">9 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="10240" data-disk="10240" data-cpu="150">10 GB</div>
+                                <div class="package-card px-4 py-2 rounded-lg border border-gray-600 bg-[#2d3748] hover:bg-gray-700/50 text-sm" data-ram="0" data-disk="0" data-cpu="0">Unlimited</div>
+                            </div>
+                        </div>
+
+                        <div id="slider-selection" class="space-y-4 hidden">
+                            <div>
+                                <label for="ram-slider" class="block text-sm font-medium text-gray-400">
+                                    RAM: <span id="ram-value">1</span> GB
+                                </label>
+                                <input type="range" id="ram-slider" min="1024" max="30720" value="1024" step="1024" class="w-full mt-2">
+                            </div>
+                            <div>
+                                <label for="disk-slider" class="block text-sm font-medium text-gray-400">
+                                    Disk: <span id="disk-value">1</span> GB
+                                </label>
+                                <input type="range" id="disk-slider" min="1024" max="30720" value="1024" step="1024" class="w-full mt-2">
+                            </div>
+                            <div>
+                                <label for="cpu-slider" class="block text-sm font-medium text-gray-400">
+                                    CPU: <span id="cpu-value">10</span> %
+                                </label>
+                                <input type="range" id="cpu-slider" min="10" max="200" value="10" step="10" class="w-full mt-2">
+                            </div>
+                        </div>
+
+                        <div id="max-players-div" class="hidden">
+                            <label for="max_players" class="block text-sm font-medium text-gray-400">Max Players</label>
+                            <input type="number" id="max_players" class="mt-1 block w-full rounded-md bg-[#4a5568] border-transparent focus:border-indigo-500 focus:ring-indigo-500 text-white p-2">
+                        </div>
+                        
+                        <button type="submit" id="create-btn" class="w-full px-4 py-2 mt-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-colors duration-200">
+                            Buat Server
+                        </button>
+                    </form>
+                </div>
+
+                <div id="list-servers-tab" class="tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-200">Daftar Server</h2>
+                    <div class="bg-[#2d3748] p-6 rounded-2xl border border-gray-700 card-3d">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Daftar Server</h3>
+                            <div class="flex space-x-2">
+                                <button onclick="fetchServers()" class="px-2 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700">Refresh</button>
+                                <button id="delete-all-servers-btn" class="px-2 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">Hapus Server</button>
+                            </div>
+                        </div>
+                        <div class="scrollable-list">
+                            <ul id="server-list" class="space-y-2 text-sm text-gray-300"></ul>
+                        </div>
+                        <div id="server-pagination" class="mt-4 flex items-center justify-between">
+                            <button id="server-prev-btn" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <
+                            </button>
+                            <span id="server-page-info" class="text-sm text-gray-400"></span>
+                            <button id="server-next-btn" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="list-users-tab" class="tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-200">Daftar User</h2>
+                    <div class="bg-[#2d3748] p-6 rounded-2xl border border-gray-700 card-3d">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Daftar User</h3>
+                            <div class="flex space-x-2">
+                                <button onclick="fetchUsers()" class="px-2 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700">Refresh</button>
+                                <button id="delete-all-non-admin-users-btn" class="px-2 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">Hapus User</button>
+                            </div>
+                        </div>
+                        <div class="scrollable-list">
+                            <ul id="user-list" class="space-y-2 text-sm text-gray-300"></ul>
+                        </div>
+                        <div id="user-pagination" class="mt-4 flex items-center justify-between">
+                            <button id="user-prev-btn" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <
+                            </button>
+                            <span id="user-page-info" class="text-sm text-gray-400"></span>
+                            <button id="user-next-btn" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="create-admin-tab" class="tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-200">Buat Admin Panel</h2>
+                    <div class="bg-[#2d3748] p-6 rounded-2xl border border-gray-700 card-3d">
+                        <h4 class="font-semibold text-gray-200 mb-2">Admin panel (Only Dalang)</h4>
+                        <form id="create-admin-form" class="mt-2 space-y-2">
+                            <div>
+                                <label for="admin-username" class="block text-sm font-medium text-gray-400">Username</label>
+                                <input type="text" id="admin-username" placeholder="Masukkan Username" class="block w-full rounded-md bg-[#4a5568] border-transparent text-white p-2 text-sm" required>
+                            </div>
+                            <div>
+                                <label for="admin-token" class="block text-sm font-medium text-gray-400">PIN Admin</label>
+                                <input type="password" id="admin-token" placeholder="Masukkan PIN" class="block w-full rounded-md bg-[#4a5568] border-transparent text-white p-2 text-sm" required>
+                            </div>
+                            <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-colors duration-200 text-sm">
+                                Buat Admin
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="manage-keys-tab" class="tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-200">Kelola Key Akses</h2>
+                    <div id="create-key-section" class="bg-[#2d3748] p-6 rounded-2xl border border-gray-700 card-3d mb-6">
+                        <h4 class="font-semibold text-gray-200 mb-4">Buat Key Baru</h4>
+                        <form id="create-key-form" class="space-y-4">
+                            <div>
+                                <label for="key-prefix" class="block text-sm font-medium text-gray-400">Nama Key</label>
+                                <input type="text" id="key-prefix" placeholder="Masukkan Nama..." class="mt-1 block w-full rounded-md bg-[#4a5568] border-transparent focus:border-indigo-500 focus:ring-indigo-500 text-white p-2" required>
+                            </div>
+                            <div id="create-key-role-selection-div">
+                                <label for="key-role" class="block text-sm font-medium text-gray-400">Role Key</label>
+                                <select id="key-role" class="mt-1 block w-full rounded-md bg-[#4a5568] border-transparent focus:border-indigo-500 focus:ring-indigo-500 text-white p-2" required>
+                                    </select>
+                            </div>
+                            <button type="submit" id="create-key-btn" class="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-colors duration-200">
+                                Buat Key
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="list-keys-section" class="bg-[#2d3748] p-6 rounded-2xl border border-gray-700 card-3d">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Daftar Key</h3>
+                            <button onclick="fetchKeys()" class="px-2 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700">Refresh</button>
+                        </div>
+                        <div class="scrollable-list">
+                            <ul id="key-list" class="space-y-2 text-sm text-gray-300"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageContainer = document.getElementById('message-container');
+            const messageBox = document.getElementById('message-box');
+            const createForm = document.getElementById('create-server-form');
+            const platformSelect = document.getElementById('platform-select');
+            const osSelect = document.getElementById('os-select');
+            const sampOsSelectionDiv = document.getElementById('samp-os-selection');
+            const packageSelectionDiv = document.getElementById('package-selection');
+            const packageContainer = document.getElementById('package-container');
+            const sliderSelectionDiv = document.getElementById('slider-selection');
+            const ramSlider = document.getElementById('ram-slider');
+            const ramValue = document.getElementById('ram-value');
+            const diskSlider = document.getElementById('disk-slider');
+            const diskValue = document.getElementById('disk-value');
+            const cpuSlider = document.getElementById('cpu-slider');
+            const cpuValue = document.getElementById('cpu-value');
+            const maxPlayersDiv = document.getElementById('max-players-div');
+            const createBtn = document.getElementById('create-btn');
+            const serverList = document.getElementById('server-list');
+            const userList = document.getElementById('user-list');
+            const createAdminForm = document.getElementById('create-admin-form');
+            const confirmModal = document.getElementById('confirmation-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+            const modalCancelBtn = document.getElementById('modal-cancel-btn');
+            const successModal = document.getElementById('success-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSubtitle = document.getElementById('modal-subtitle');
+            const modalDetailsContainer = document.getElementById('modal-details-container');
+            const copyAllBtn = document.getElementById('copy-all-btn');
+            const closeSuccessModalBtn = document.getElementById('close-success-modal');
+            
+            const hamburgerMenu = document.getElementById('hamburger-menu');
+            const closeSidebar = document.getElementById('close-sidebar');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+            const existingUserCheckbox = document.getElementById('existing-user-checkbox');
+            const userIdInputGroup = document.getElementById('user-id-input-group');
+            const userIdInput = document.getElementById('user-id');
+            const serverNameInput = document.getElementById('server-name');
+            const deleteAllServersBtn = document.getElementById('delete-all-servers-btn');
+            const deleteAllNonAdminUsersBtn = document.getElementById('delete-all-non-admin-users-btn');
+            
+            // New Key Management Elements
+            const loginModal = document.getElementById('login-modal');
+            const loginForm = document.getElementById('login-form');
+            const accessKeyInput = document.getElementById('access-key-input');
+            const mainContent = document.getElementById('main-content');
+            const navKeysSidebar = document.getElementById('nav-keys-sidebar');
+            const createKeyForm = document.getElementById('create-key-form');
+            const keyPrefixInput = document.getElementById('key-prefix');
+            const keyRoleSelect = document.getElementById('key-role');
+            const keyList = document.getElementById('key-list');
+            const createKeyBtn = document.getElementById('create-key-btn');
+            const createKeyRoleSelectionDiv = document.getElementById('create-key-role-selection-div');
+
+            // Pagination elements
+            const itemsPerPage = 10;
+            const serverPrevBtn = document.getElementById('server-prev-btn');
+            const serverNextBtn = document.getElementById('server-next-btn');
+            const serverPageInfo = document.getElementById('server-page-info');
+            const userPrevBtn = document.getElementById('user-prev-btn');
+            const userNextBtn = document.getElementById('user-next-btn');
+            const userPageInfo = document.getElementById('user-page-info');
+
+            let selectedPackage = null;
+            let currentAction = null;
+            let selectedPlatform = 'nodejs';
+            let userRole = null;
+
+            let allServers = [];
+            let currentServerPage = 1;
+            let allUsers = [];
+            let currentUserPage = 1;
+            let allKeys = [];
+
+            const BACKEND_URL = '';
+
+            function showMessage(text, type = 'success') {
+                messageBox.textContent = text;
+                messageContainer.classList.add('show');
+                messageBox.className = 'p-4 rounded-md border text-sm break-words';
+                if (type === 'success') {
+                    messageBox.classList.add('bg-green-800', 'border-green-600');
+                } else if (type === 'error') {
+                    messageBox.classList.add('bg-red-800', 'border-red-600');
+                } else if (type === 'warning') {
+                    messageBox.classList.add('bg-yellow-800', 'border-yellow-600');
+                }
+                setTimeout(() => {
+                    messageContainer.classList.remove('show');
+                }, 5000);
+            }
+
+            function showModal(modalId) {
+                document.getElementById(modalId).style.display = 'flex';
+            }
+
+            window.showModal = showModal;
+
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+
+            window.closeModal = closeModal;
+
+            function copyToClipboard(text, message) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showMessage(message, 'success');
+                }).catch(err => {
+                    showMessage('Gagal menyalin teks.', 'error');
+                });
+            }
+
+            function showConfirmation(message, callback) {
+                modalMessage.textContent = message;
+                confirmModal.style.display = 'flex';
+                currentAction = callback;
+            }
+
+            function hideConfirmation() {
+                confirmModal.style.display = 'none';
+                currentAction = null;
+            }
+
+            modalConfirmBtn.addEventListener('click', () => {
+                if (currentAction) {
+                    currentAction();
+                }
+                hideConfirmation();
+            });
+
+            modalCancelBtn.addEventListener('click', () => {
+                hideConfirmation();
+            });
+            
+            function showSuccessModal(title, subtitle, details) {
+                modalTitle.textContent = title;
+                modalSubtitle.textContent = subtitle;
+                modalDetailsContainer.textContent = details;
+                successModal.style.display = 'flex';
+            }
+            
+            copyAllBtn.addEventListener('click', () => {
+                copyToClipboard(modalDetailsContainer.textContent, 'Semua data berhasil disalin!');
+            });
+
+            closeSuccessModalBtn.addEventListener('click', () => {
+                successModal.style.display = 'none';
+            });
+
+            window.toggleSidebar = () => {
+                const isSidebarVisible = sidebar.classList.contains('translate-x-0');
+                if (window.innerWidth < 1024) { 
+                    if (isSidebarVisible) {
+                        sidebar.classList.remove('translate-x-0');
+                        sidebar.classList.add('-translate-x-full');
+                        sidebarOverlay.classList.add('hidden');
+                    } else {
+                        sidebar.classList.remove('-translate-x-full');
+                        sidebar.classList.add('translate-x-0');
+                        sidebarOverlay.classList.remove('hidden');
+                    }
+                }
+            };
+            
+            hamburgerMenu.addEventListener('click', toggleSidebar);
+            closeSidebar.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+            
+            window.showTab = (tabName) => {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+
+                if (tabName === 'list-servers') {
+                    fetchServers();
+                } else if (tabName === 'list-users') {
+                    fetchUsers();
+                } else if (tabName === 'manage-keys') {
+                    fetchKeys();
+                }
+            };
+
+            window.handleLogout = () => {
+                localStorage.removeItem('accessKey');
+                localStorage.removeItem('userRole');
+                userRole = null;
+                loginModal.style.display = 'flex';
+                mainContent.classList.add('hidden');
+                updateUIByRole();
+                showMessage('Anda berhasil logout.', 'success');
+            };
+
+            function updateUIByRole() {
+                const role = localStorage.getItem('userRole');
+                document.querySelectorAll('.nav-button.hidden').forEach(el => el.classList.add('hidden'));
+
+                if (role === 'owner') {
+                    document.getElementById('nav-keys-sidebar').classList.remove('hidden');
+                    document.getElementById('nav-create-admin-sidebar').classList.remove('hidden');
+                    deleteAllServersBtn.classList.remove('hidden');
+                    deleteAllNonAdminUsersBtn.classList.remove('hidden');
+                } else if (role === 'partner') {
+                    document.getElementById('nav-keys-sidebar').classList.remove('hidden');
+                    document.getElementById('nav-create-admin-sidebar').classList.remove('hidden');
+                    deleteAllServersBtn.classList.add('hidden');
+                    deleteAllNonAdminUsersBtn.classList.remove('hidden');
+                } else if (role === 'admin') {
+                    document.getElementById('nav-keys-sidebar').classList.remove('hidden');
+                    document.getElementById('nav-create-admin-sidebar').classList.add('hidden');
+                    deleteAllServersBtn.classList.add('hidden');
+                    deleteAllNonAdminUsersBtn.classList.add('hidden');
+                } else {
+                     document.getElementById('nav-create-admin-sidebar').classList.add('hidden');
+                     document.getElementById('nav-keys-sidebar').classList.add('hidden');
+                     deleteAllServersBtn.classList.add('hidden');
+                     deleteAllNonAdminUsersBtn.classList.add('hidden');
+                }
+            }
+            
+            const toggleFormElements = () => {
+                const mainPlatform = platformSelect.value;
+                
+                packageSelectionDiv.classList.add('hidden');
+                sampOsSelectionDiv.classList.add('hidden');
+                sliderSelectionDiv.classList.add('hidden');
+                maxPlayersDiv.classList.add('hidden');
+                
+                if (mainPlatform === 'nodejs') {
+                    packageSelectionDiv.classList.remove('hidden');
+                    const firstPackageCard = document.querySelector('.package-card');
+                    if (firstPackageCard) {
+                        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+                        firstPackageCard.classList.add('selected');
+                        selectedPackage = {
+                            ram: firstPackageCard.dataset.ram,
+                            disk: firstPackageCard.dataset.disk,
+                            cpu: firstPackageCard.dataset.cpu
+                        };
+                    }
+                    selectedPlatform = 'nodejs';
+                } else if (mainPlatform === 'samp') {
+                    sampOsSelectionDiv.classList.remove('hidden');
+                    const selectedOS = osSelect.value;
+                    if (selectedOS) {
+                        sliderSelectionDiv.classList.remove('hidden');
+                        maxPlayersDiv.classList.remove('hidden');
+                        selectedPlatform = selectedOS;
+                    }
+                }
+            };
+
+            platformSelect.addEventListener('change', toggleFormElements);
+            osSelect.addEventListener('change', toggleFormElements);
+
+            packageContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('.package-card');
+                if (!card) return;
+
+                document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+
+                selectedPackage = {
+                    ram: card.dataset.ram,
+                    disk: card.dataset.disk,
+                    cpu: card.dataset.cpu
+                };
+            });
+            
+            ramSlider.addEventListener('input', () => {
+                ramValue.textContent = ramSlider.value / 1024;
+            });
+            diskSlider.addEventListener('input', () => {
+                diskValue.textContent = diskSlider.value / 1024;
+            });
+            cpuSlider.addEventListener('input', () =>
     }
 
     .form-group {
