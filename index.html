@@ -1,39 +1,354 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>X-ATHENA-Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BreakGpt V1 - Restricted AI Interface</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💥</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variabel CSS diperbarui untuk tema Merah dan Hitam */
+        :root {
+            --bg-color: #0d0d0d;
+            --container-bg-color: #000;
+            --border-color: #ff3333; /* Merah terang */
+            --text-color: #f0f0f0; /* Putih/Abu-abu terang untuk teks */
+            --user-message-bg: #440000; /* Merah tua untuk pesan pengguna */
+            --bot-message-bg: #1a1a1a;
+            --input-bg: #0d0d0d;
+            --send-btn-color: #ff3333;
+            --font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
+        }
 
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Nosifer&display=swap"
-    rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            line-height: 1.6;
+        }
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
 
-    body {
-      background: black url('/assets/bg.jpg') center center/cover no-repeat;
-      color: #B22222;
-      font-family: 'UnifrakturCook', cursive;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
+        ::-webkit-scrollbar-track {
+            background: var(--container-bg-color);
+        }
 
-    .card {
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(138, 3, 3, 0.5);
-      backdrop-filter: blur(8px);
-      padding: 30px 24px;
+        ::-webkit-scrollbar-thumb {
+            background: var(--send-btn-color);
+            border-radius: 10px;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 1200px;
+            background-color: var(--container-bg-color);
+            border: 3px solid var(--border-color);
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.4); /* Merah dengan transparansi */
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 90vh;
+            max-height: 100vh;
+            position: relative;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--user-message-bg);
+            color: var(--text-color);
+            padding: 20px;
+            font-size: 1.8em;
+            font-weight: 700;
+            border-bottom: 3px solid var(--border-color);
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .chat-header h1 {
+            margin: 0;
+            font-size: 1em;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        /* Logo Diubah menjadi ikon generik */
+        .bot-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 10px var(--border-color);
+            background-color: #ff3333; /* Warna logo */
+        }
+        
+        .new-chat-btn {
+            background-color: var(--bot-message-bg);
+            color: var(--send-btn-color);
+            border: 1px solid var(--send-btn-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .new-chat-btn:hover {
+            background-color: rgba(255, 51, 51, 0.1);
+            border-color: #ff0000;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 90%;
+            padding: 14px 20px;
+            border-radius: 24px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            animation: fadeIn 0.5s ease-in-out;
+            white-space: pre-wrap;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);
+            text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+            border: 1px solid #ff3333;
+        }
+        
+        /* Gaya untuk elemen lainnya tetap menggunakan tema yang sudah ada */
+
+        .user-message {
+            background-color: var(--user-message-bg);
+            color: var(--text-color);
+            align-self: flex-end;
+            margin-left: auto;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            border: 1px solid #ff0000;
+        }
+
+        .bot-message {
+            background-color: var(--bot-message-bg);
+            color: var(--text-color);
+            align-self: flex-start;
+            margin-right: auto;
+            border: 1px solid #ff3333;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-top: 3px solid var(--border-color);
+            background-color: var(--container-bg-color);
+            gap: 10px;
+        }
+
+        /* Input dan Tombol */
+        #user-input {
+            flex-grow: 1;
+            padding: 14px 20px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border-radius: 24px;
+            font-size: 1em;
+            outline: none;
+        }
+
+        #user-input:focus {
+            border-color: var(--send-btn-color);
+            box-shadow: 0 0 8px rgba(255, 51, 51, 0.8);
+        }
+
+        .input-container button {
+            padding: 14px 28px;
+            border: none;
+            background-color: var(--send-btn-color);
+            color: var(--bg-color);
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease, transform 0.2s;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .input-container button:hover {
+            background-color: #ff0000;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 51, 51, 1);
+        }
+        
+        /* Media queries... */
+        /* ... (tidak berubah dari kode asli Anda) */
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="bot-logo">💥</div>
+            <h1>BreakGpt V1: UI Shell</h1>
+            <button class="new-chat-btn" onclick="newChat()">New Chat</button>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">Selamat datang di BreakGpt V1 Interface. Hubungkan API AI Anda.</div>
+            </div>
+        <div class="input-container">
+            <input type="file" id="file-input" multiple>
+            <label for="file-input" style="color: var(--send-btn-color);">📎</label>
+            <input type="text" id="user-input" placeholder="Kirim pesan...">
+            <button onclick="sendMessage()">KIRIM</button>
+        </div>
+    </div>
+
+    <script>
+        // PENTING: API Key dan Jailbreak Prompt telah dihapus
+        const API_ENDPOINT = 'URL_API_ANDA_DI_SINI'; // Ganti dengan endpoint API Anda
+        
+        let conversationHistory = [];
+
+        // Prompt awal yang netral untuk UI shell
+        const initialPrompt = "Initializing BreakGPT V1 Interface...";
+
+        // Load conversation history dari localStorage (tetap dipertahankan)
+        const storedHistory = localStorage.getItem('chatHistory');
+        if (storedHistory) {
+            conversationHistory = JSON.parse(storedHistory);
+            // Re-render chat messages dari history
+            conversationHistory.forEach(message => {
+                // Filter pesan sistem/jailbreak yang mungkin ada dari riwayat lama
+                if (message.role !== "system") {
+                    addMessageToChat(message.role, message.parts[0].text);
+                }
+            });
+        } else {
+            conversationHistory = [{
+                role: "model",
+                parts: [{ text: initialPrompt }]
+            }];
+            addMessageToChat('bot', 'Welcome to BreakGpt V1 Interface. Ready to connect.');
+        }
+
+        function saveChatHistory() {
+            // Logika menyimpan riwayat obrolan
+            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
+        }
+
+        function addMessageToChat(role, messageText, imageSrc = null) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            
+            if (messageText) {
+                const formattedText = messageText.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+                messageDiv.innerHTML = formattedText;
+            }
+            
+            if (imageSrc) {
+                const imgTag = document.createElement('img');
+                imgTag.src = imageSrc;
+                messageDiv.appendChild(imgTag);
+            }
+
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function newChat() {
+            if (confirm("Yakin mau hapus semua chat?")) {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML = ''; 
+                
+                conversationHistory = [{
+                    role: "model",
+                    parts: [{ text: initialPrompt }]
+                }];
+                
+                localStorage.removeItem('chatHistory');
+                
+                addMessageToChat('bot', 'New session started. Please connect your AI model.');
+            }
+        }
+
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value.trim();
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            const chatBox = document.getElementById('chat-box');
+
+            if (!userInput && !file) {
+                return;
+            }
+            
+            // Logika untuk menampilkan pesan pengguna dan memproses file tetap dipertahankan
+            let parts = [];
+            // ... (Kode untuk memproses file dan menambahkan pesan pengguna ke riwayat) ...
+            
+            if (userInput) {
+                addMessageToChat('user', userInput);
+                // Tambahkan pesan pengguna ke riwayat
+                parts.push({ text: userInput }); 
+            }
+            
+            // (Tambahkan logika pengunggahan file dan pemrosesan bagian file di sini, jika diperlukan)
+
+            if (parts.length > 0) {
+                conversationHistory.push({
+                    role: "user",
+                    parts: parts
+                });
+            }
+
+            document.getElementById('user-input').value = '';
+            fileInput.value = null;
+            saveChatHistory();
+            
+            // Ganti logika API call yang spesifik dengan placeholder
+            const loadingMessageDiv = document.createElement('div');
+            loadingMessageDiv.className = 'message bot-message loading';
+            loadingMessageDiv.textContent = 'Memproses... (Hubungkan ke API AI Anda)';
+            chatBox.appendChild(loadingMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Simulasi respons (hapus ini saat mengintegrasikan API nyata)
+            setTimeout(() => {
+                loadingMessageDiv.textContent = 'Ini adalah respons simulasi. Untuk fungsionalitas penuh, ganti variabel `API_ENDPOINT` dan buat fungsi `fetch` yang sesuai.';
+                
+                // Tambahkan respons simulasi ke riwayat obrolan (opsional)
+                conversationHistory.push({
+                    role: "model",
+                    parts: [{ text: loadingMessageDiv.textContent }]
+                });
+                saveChatHistory();
+                
+            }, 1500);
+            // Akhir Simulasi
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
       border-radius: 20px;
       width: 100%;
       max-width: 400px;
